@@ -24,4 +24,14 @@ public class UserServiceImpl implements UserService {
     public List<User> getUser(HashMap<String, Object> map) throws Exception {
         return userMapper.getUser(map);
     }
+
+    /**
+     * 插入一个或者多个user对象
+     * @param users
+     * @return
+     * @throws Exception
+     */
+    public int insertUser(List<User> users) throws Exception{
+        return userMapper.insertUser(users);
+    };
 }

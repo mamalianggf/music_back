@@ -1,6 +1,9 @@
 package com.gf.music.domain;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
+
     private int id;
     private String name;
     private String pwd;
@@ -8,7 +11,8 @@ public class User {
     private String img;
     private String email;
 
-    public User(){}
+    public User() {
+    }
 
     public User(int id, String name, String pwd, int account, String img, String email) {
         this.id = id;
@@ -78,4 +82,5 @@ public class User {
                 ", email='" + email + '\'' +
                 '}';
     }
+
 }

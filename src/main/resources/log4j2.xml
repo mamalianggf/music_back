@@ -1,62 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--logger leves trace<debug<info<warn<error<fatal -->
-<configuration status="off">
+<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<!--trace： 是追踪，就是程序推进以下，你就可以写个trace输出，所以trace应该会特别多，不过没关系，我们可以设置最低日志级别不让他输出。
+    debug： 调试么，我一般就只用这个作为最低级别，trace压根不用。是在没办法就用eclipse或者idea的debug功能就好了么。
+    info： 输出一下你感兴趣的或者重要的信息，这个用的最多了。
+    warn： 有些信息不是错误信息，但是也要给程序员的一些提示，类似于eclipse中代码的验证不是有error 和warn（不算错误但是也请注意，比如以下depressed的方法）。
+    error： 错误信息。用的也比较多。
+    fatal： 级别比较高了。重大错误，这种级别你可以直接停止程序了，是不应该出现的错误么！不用那么紧张，其实就是一个程度的问题。
+-->
+<!--Configuration后面的status，这个用于设置log4j2自身内部的信息输出，可以不设置，当设置成trace时，你会看到log4j2内部各种详细输出-->
+<!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数-->
+<configuration status="OFF" monitorInterval="30">
+    <!-- 输出到不类型的地址 -->
     <appenders>
+        <!--这个输出控制台的配置-->
         <Console name="console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %l - %m%n"/>
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p]--%l--%m%n"/>
         </Console>
-        <RollingFile name="info_appender" fileName="logs/log.log" filePattern="logs/%d{yyyy-MM-dd}/log_%i.log.gz">
-            <Filters>
-                <ThresholdFilter level="info"/>
-                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
-            </Filters>
+
+        <!-- 这个会打印出所有的info及以上级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="debug_appender" fileName="logs/log-debug.log"
+                     filePattern="logs/%d{yyyy-MM-dd}/log_debug_%i.log.gz">
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %l - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="200 MB"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
             </Policies>
         </RollingFile>
-        <RollingFile name="error_appender" fileName="logs/log-error.log" filePattern="logs/%d{yyyy-MM-dd}/log_error_%i.log.gz">
-            <Filters>
-                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
+        <RollingFile name="warn_appender" fileName="logs/log-warn.log"
+                     filePattern="logs/%d{yyyy-MM-dd}/log_warn_%i.log.gz">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %l - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="200 MB"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
             </Policies>
-            <DefaultRolloverStrategy max="3"/>
         </RollingFile>
-        <RollingFile name="sql_appender" fileName="logs/log-sql.log" filePattern="logs/%d{yyyy-MM-dd}/log_sql_%i.log.gz">
-            <Filters>
-                <ThresholdFilter level="debug"/>
-            </Filters>
+        <RollingFile name="error_appender" fileName="logs/log-error.log"
+                     filePattern="logs/%d{yyyy-MM-dd}/log_error_%i.log.gz">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %l - %m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="200 MB"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
             </Policies>
-            <DefaultRolloverStrategy max="3"/>
         </RollingFile>
+        <!-- sql：保存sql相关日志 -->
+        <!--<RollingFile name="sql" fileName="logs/log-sql.log"
+                     filePattern="logs/%d{yyyy-MM-dd}/log_sql_%i.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %l - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+        </RollingFile>-->
     </appenders>
     <loggers>
-        <Root level="info">
+        <Root level="debug">
             <AppenderRef ref="console"/>
-            <AppenderRef ref="info_appender"/>
+            <AppenderRef ref="debug_appender"/>
+            <AppenderRef ref="warn_appender"/>
             <AppenderRef ref="error_appender"/>
         </Root>
-        <Logger name="errorLog" level="info" additivity="false">
-            <appender-ref ref="error_appender" level="info"/>
-        </Logger>
-        <Logger name="com.example.log4jtest.dao" level="DEBUG" additivity="false">
-            <appender-ref ref="sql_appender" level="DEBUG"/>
-        </Logger>
-        <!--  <logger name="jdbc.connection" level="OFF"/>
-          <logger name="jdbc.audit" level="OFF"/>
-          <logger name="jdbc.resultset" level="OFF"/>
-          <Logger name="jdbc.sqlonly" level="DEBUG" additivity="false">
-            <appender-ref ref="sql_appender" level="DEBUG"/>
-          </Logger>-->
     </loggers>
 </configuration>

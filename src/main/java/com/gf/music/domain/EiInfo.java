@@ -3,12 +3,15 @@ package com.gf.music.domain;
 public class EiInfo {
     private int status;
     private Object message;
+    private int token;
 
-    public EiInfo(){}
+    public EiInfo() {
+    }
 
-    public EiInfo(int status, Object message) {
+    public EiInfo(int status, Object message, int token) {
         this.status = status;
         this.message = message;
+        this.token = token;
     }
 
     public int getStatus() {
@@ -27,11 +30,20 @@ public class EiInfo {
         this.message = message;
     }
 
+    public int getToken() {
+        return token;
+    }
+
+    public void setToken(int token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         return "EiInfo{" +
-                "status='" + status + '\'' +
+                "status=" + status +
                 ", message=" + message +
+                ", token=" + token +
                 '}';
     }
 }

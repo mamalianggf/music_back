@@ -30,5 +30,12 @@
         </choose>
     </select>
 
+    <insert id="insertUser" parameterType="User">
+        insert into user (name,pwd,email) values
+        <foreach collection="list" item="user" index="index" separator=",">
+            (#{user.name,jdbcType=VARCHAR},#{user.pwd,jdbcType=VARCHAR},#{user.email,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
 
 </mapper>

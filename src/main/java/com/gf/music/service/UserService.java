@@ -13,4 +13,12 @@ public interface UserService {
      * @return
      */
     List<User> getUser(HashMap<String,Object> map) throws Exception;
+
+    /**
+     * 插入一个或者多个user对象
+     * @param users
+     * @return
+     * @throws Exception
+     */
+    int insertUser(List<User> users) throws Exception;
 }
