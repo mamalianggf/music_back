@@ -4,6 +4,7 @@ import com.gf.music.domain.User;
 import com.gf.music.util.CollectionUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
@@ -41,6 +42,10 @@ class MusicApplicationTests {
 		list2.get(0).setName("cc");
 		System.out.println(list1);
 		System.out.println(list2);
+	}
+
+	@Test
+	void test2(){
 	}
 
 	public static <T> List<T> deepCopy(List<T> src) throws IOException, ClassNotFoundException {

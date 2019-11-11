@@ -1,17 +1,24 @@
 package com.gf.music.domain;
 
+import java.util.HashMap;
+
 public class EiInfo {
     private int status;
     private Object message;
-    private int token;
+    private HashMap result;
 
     public EiInfo() {
     }
 
-    public EiInfo(int status, Object message, int token) {
+    public EiInfo(int status, Object message) {
         this.status = status;
         this.message = message;
-        this.token = token;
+    }
+
+    public EiInfo(int status, Object message, HashMap result) {
+        this.status = status;
+        this.message = message;
+        this.result = result;
     }
 
     public int getStatus() {
@@ -30,12 +37,12 @@ public class EiInfo {
         this.message = message;
     }
 
-    public int getToken() {
-        return token;
+    public HashMap getResult() {
+        return result;
     }
 
-    public void setToken(int token) {
-        this.token = token;
+    public void setResult(HashMap result) {
+        this.result = result;
     }
 
     @Override
@@ -43,7 +50,7 @@ public class EiInfo {
         return "EiInfo{" +
                 "status=" + status +
                 ", message=" + message +
-                ", token=" + token +
+                ", result=" + result +
                 '}';
     }
 }

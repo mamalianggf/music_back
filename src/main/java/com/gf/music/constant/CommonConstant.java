@@ -2,13 +2,9 @@ package com.gf.music.constant;
 
 public class CommonConstant {
 
-    public final static int QUERY_SUCCESS = 0;//查询成功
-    public final static int QUERY_NULL = -1;  //查询为空
-    public final static int QUERY_FAIL = 1;   //查询报错
-
-    public final static int INSERT_SUCCESS = 0;//插入成功
-    public final static int INSERT_NULL = -1;  //插入0行
-    public final static int INSERT_FAIL = 1;   //插入报错
+    public final static int HTTP_STATUS_ERROR = 500;   //服务器报错
+    public final static int HTTP_STATUS_SUCCESS = 200; //成功处理请求
+    public final static int HTTP_STATUS_MEDIUM = 204;  //成功处理但是没返回想要的东西
 
     public final static String USER_IMG_URL_PREFIX = "http://106.15.248.92:8083/userImg/";//userImg的url前缀
 }
