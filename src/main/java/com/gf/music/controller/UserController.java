@@ -3,6 +3,7 @@ package com.gf.music.controller;
 import com.gf.music.constant.CommonConstant;
 import com.gf.music.domain.EiInfo;
 import com.gf.music.domain.User;
+import com.gf.music.service.MailService;
 import com.gf.music.service.UserService;
 import com.gf.music.util.CollectionUtils;
 import com.gf.music.util.MD5Utils;
@@ -25,6 +26,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private MailService mailService;
 
     private final static Logger userLogger = LoggerFactory.getLogger(UserController.class);
 
@@ -37,13 +40,20 @@ public class UserController {
         EiInfo eiInfo = new EiInfo();
         //todo.如果size大于1？
         List<User> user = userService.getUser(CollectionUtils.createHashMap("name", name));
-        if (user.size() > 0 && MD5Utils.GetMD5Code(pwd).equals(user.get(0).getPwd())) {
-            eiInfo.setStatus(CommonConstant.HTTP_STATUS_SUCCESS);
-            eiInfo.setMessage("登录成功");
-            eiInfo.setResult(CollectionUtils.createHashMap("token", user.get(0).getId()));
+        User param = user.get(0);
+        if (user.size() > 0 && param.isActive()) {//判断是否已经被激活
+            if (MD5Utils.GetMD5Code(pwd).equals(user.get(0).getPwd())) {
+                eiInfo.setStatus(CommonConstant.HTTP_STATUS_SUCCESS);
+                eiInfo.setMessage("登录成功");
+                eiInfo.setResult(CollectionUtils.createHashMap("token", user.get(0).getId()));
+            } else {
+                eiInfo.setStatus(CommonConstant.HTTP_STATUS_MEDIUM);
+                eiInfo.setMessage("账号或者密码错误");
+            }
         } else {
+            mailService.sendMail(param);
             eiInfo.setStatus(CommonConstant.HTTP_STATUS_MEDIUM);
-            eiInfo.setMessage("账号或者密码错误");
+            eiInfo.setMessage("用户邮箱未激活已发送激活邮件");
         }
         return eiInfo;
     }
@@ -81,14 +91,42 @@ public class UserController {
         result = userService.insertUser(users);
         if (result > 0) {
             List<User> userList = userService.getUser(CollectionUtils.createHashMap("name", user.getName()));
+            User param = userList.get(0);
+            //发送邮件
+            mailService.sendMail(param);
             eiInfo.setStatus(CommonConstant.HTTP_STATUS_SUCCESS);
-            eiInfo.setMessage("插入成功");
-            eiInfo.setResult(CollectionUtils.createHashMap("token", userList.get(0).getId()));
+            eiInfo.setMessage("激活email已发送\n激活后方可登录");
         } else {
             eiInfo.setStatus(CommonConstant.HTTP_STATUS_MEDIUM);
             eiInfo.setMessage("插入空行");
         }
         return eiInfo;
+    }
+
+    /*
+    返回user对象
+     */
+    @RequestMapping(value = "/getUser", method = RequestMethod.GET)
+    @ResponseBody
+    public EiInfo getUser(String token) throws Exception {
+        EiInfo eiInfo = new EiInfo();
+        List<User> users = userService.getUser(CollectionUtils.createHashMap("id", token));
+        if (users.size() > 0) {
+            eiInfo.setStatus(CommonConstant.HTTP_STATUS_SUCCESS);
+            eiInfo.setMessage("该用户已登录");
+            eiInfo.setResult(CollectionUtils.createHashMap("user", users.get(0)));
+        } else {
+            eiInfo.setStatus(CommonConstant.HTTP_STATUS_MEDIUM);
+            eiInfo.setMessage("无效token");
+        }
+        return eiInfo;
+    }
+
+    @RequestMapping("/active")
+    @ResponseBody
+    public String active(String id) throws Exception{
+        userService.updateUser(Integer.valueOf(id));
+        return "恭喜您已激活，快去登录吧！";
     }
 
 

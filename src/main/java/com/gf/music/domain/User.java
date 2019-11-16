@@ -10,17 +10,19 @@ public class User implements Serializable{
     private int account;
     private String img;
     private String email;
+    private boolean active;
 
     public User() {
     }
 
-    public User(int id, String name, String pwd, int account, String img, String email) {
+    public User(int id, String name, String pwd, int account, String img, String email, boolean active) {
         this.id = id;
         this.name = name;
         this.pwd = pwd;
         this.account = account;
         this.img = img;
         this.email = email;
+        this.active = active;
     }
 
     public int getId() {
@@ -71,6 +73,14 @@ public class User implements Serializable{
         this.email = email;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -80,7 +90,10 @@ public class User implements Serializable{
                 ", account=" + account +
                 ", img='" + img + '\'' +
                 ", email='" + email + '\'' +
+                ", active=" + active +
                 '}';
     }
+
+
 
 }

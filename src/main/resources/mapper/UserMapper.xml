@@ -11,7 +11,7 @@
         <result column="email" property="email" jdbcType="VARCHAR"/>
     </resultMap>-->
 
-    <sql id="User_Colums">id,name,pwd,account,img,email</sql>
+    <sql id="User_Colums">id,name,pwd,account,img,email,active</sql>
 
     <select id="getUser" parameterType="HashMap" resultType="User">
         select
@@ -36,6 +36,19 @@
             (#{user.name,jdbcType=VARCHAR},#{user.pwd,jdbcType=VARCHAR},#{user.email,jdbcType=VARCHAR})
         </foreach>
     </insert>
+
+    <update id="updateUser" parameterType="int">
+        <!--update User set
+        pwd = #{pwd ,jdbcType=VARCHAR},
+        account = #{account ,jdbcType=INTEGER},
+        img = #{img ,jdbcType=VARCHAR},
+        email = #{email ,jdbcType=VARCHAR},
+        active = #{active ,jdbcType=TINYINT}
+        WHERE id = #{id,jdbcType=INTEGER} -->
+        update User set
+        active = 1
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
 
 
 </mapper>

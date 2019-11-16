@@ -24,4 +24,12 @@ public interface UserMapper {
      */
     int insertUser(List<User> users) throws Exception;
 
+    /**
+     * 根据参数修改对应user记录
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    int updateUser(int id) throws Exception;
+
 }

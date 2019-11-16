@@ -34,4 +34,14 @@ public class UserServiceImpl implements UserService {
     public int insertUser(List<User> users) throws Exception{
         return userMapper.insertUser(users);
     };
+
+    /**
+     * 根据参数修改对应user记录
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public int updateUser(int id) throws Exception{
+        return userMapper.updateUser(id);
+    };
 }
