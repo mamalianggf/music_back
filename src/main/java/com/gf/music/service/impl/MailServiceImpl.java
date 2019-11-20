@@ -31,7 +31,6 @@ public class MailServiceImpl implements MailService {
         mimeMessage.setFrom(username);
         mimeMessageHelper.setTo(user.getEmail());
         mimeMessageHelper.setSubject("FoxMusic verify your email");
-        //todo 部署时要修改url+ip
         String html = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +

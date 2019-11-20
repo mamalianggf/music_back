@@ -17,51 +17,9 @@ import java.util.stream.Stream;
 @SpringBootTest
 class MusicApplicationTests {
 
-
-    @Test
-    void contextLoads() {
-        List<HashMap<String, Object>> a = new ArrayList();
-        HashMap para = new HashMap();
-        para.put("one", "one");
-        a.add(para);
-        try {
-            List b = deepCopy(a);
-            ((HashMap<String, String>) b.get(0)).put("two", ((HashMap<String, String>) b.get(0)).remove("one").toString());
-            System.out.println(a);
-            System.out.println(b);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void test1() {
-        // 循环bug
-        List list = new ArrayList();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        //其余代码都没有修改，就在list.add("3")之后添加这一行
-        list.add("4");
-        list.add("5");
-        Iterator<String> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            if ("3".equals(iterator.next())) {
-                iterator.remove();
-            }
-        }
-        System.out.println(list);
-
-    }
-
     @Test
     void test2() {
-        //Optional<String> helloOptional = Optional.of("Hello");
-        Optional<String> emptyOptional = Optional.empty();
-        //helloOptional.ifPresent(s -> System.out.println(s.length()));
-        emptyOptional.ifPresent(s -> System.out.println(s.length()));
+
     }
 
     public static <T> List<T> deepCopy(List<T> src) throws IOException, ClassNotFoundException {
@@ -73,5 +31,19 @@ class MusicApplicationTests {
         List<T> dest = (List<T>) in.readObject();
         return dest;
     }
+
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int para = 0;
+        for (int i = 0; i < nums.length; i++) {
+            para = target - nums[i];
+            if (map.containsKey(para) && map.get(para) != i) {
+                return new int[]{i, map.get(para)};
+            }
+            map.put(nums[i], i);
+        }
+        return null;
+    }
+
 
 }

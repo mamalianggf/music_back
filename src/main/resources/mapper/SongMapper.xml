@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gf.music.mapper.SongMapper">
+
+    <select id="listSongs" resultType="HashMap">
+        select
+            user.id,
+            song.name,
+            user.name as singerName,
+            time,
+            song.img as songImg,
+            style_ids as styleIds
+        from user,song
+    </select>
+
+
+</mapper>
