@@ -1,5 +1,7 @@
 package com.gf.music.util;
 
+
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -48,6 +50,7 @@ public class MD5Utils {
     }
 
     public static String GetMD5Code(String strObj) {
+
         String resultString = null;
         try {
             resultString = new String(strObj);

@@ -7,7 +7,6 @@ import com.gf.music.service.MailService;
 import com.gf.music.service.UserService;
 import com.gf.music.util.CollectionUtils;
 import com.gf.music.util.MD5Utils;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,22 +37,23 @@ public class UserController {
     @ResponseBody
     public EiInfo login(String name, String pwd) throws Exception {
         EiInfo eiInfo = new EiInfo();
+        eiInfo.setStatus(CommonConstant.HTTP_STATUS_MEDIUM);
+        eiInfo.setMessage("账号或者密码错误");
         //todo.如果size大于1？
         List<User> user = userService.getUser(CollectionUtils.createHashMap("name", name));
+        if (user.size() == 0) {//判断账号是否存在
+            return eiInfo;
+        }
         User param = user.get(0);
-        if (user.size() > 0 && param.isActive()) {//判断是否已经被激活
-            if (MD5Utils.GetMD5Code(pwd).equals(user.get(0).getPwd())) {
-                eiInfo.setStatus(CommonConstant.HTTP_STATUS_SUCCESS);
-                eiInfo.setMessage("登录成功");
-                eiInfo.setResult(CollectionUtils.createHashMap("token", user.get(0).getId()));
-            } else {
-                eiInfo.setStatus(CommonConstant.HTTP_STATUS_MEDIUM);
-                eiInfo.setMessage("账号或者密码错误");
-            }
-        } else {
+        if (!param.isActive()) {//判断是否已经被激活
             mailService.sendMail(param);
             eiInfo.setStatus(CommonConstant.HTTP_STATUS_MEDIUM);
             eiInfo.setMessage("用户邮箱未激活已发送激活邮件");
+        }
+        if (MD5Utils.GetMD5Code(pwd).equals(param.getPwd())) {
+            eiInfo.setStatus(CommonConstant.HTTP_STATUS_SUCCESS);
+            eiInfo.setMessage("登录成功");
+            eiInfo.setResult(CollectionUtils.createHashMap("token", param.getId()));
         }
         return eiInfo;
     }
@@ -124,7 +124,7 @@ public class UserController {
 
     @RequestMapping("/active")
     @ResponseBody
-    public String active(String id) throws Exception{
+    public String active(String id) throws Exception {
         userService.updateUser(Integer.valueOf(id));
         return "恭喜您已激活，快去登录吧！";
     }

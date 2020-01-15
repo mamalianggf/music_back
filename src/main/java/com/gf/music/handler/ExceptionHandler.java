@@ -21,7 +21,7 @@ public class ExceptionHandler {
         userLogger.error(e.getMessage());
         EiInfo eiInfo = new EiInfo();
         eiInfo.setStatus(CommonConstant.HTTP_STATUS_ERROR);
-        eiInfo.setMessage("服务器错误");
+        eiInfo.setMessage("ExceptionHandler处理错误");
         return eiInfo;
     }
 }

@@ -4,13 +4,15 @@
 
     <select id="listSongs" resultType="HashMap">
         select
-            user.id,
-            song.name,
-            user.name as singerName,
+            song.id as id,
+            song.name as name,
+            user.name as singgerName,
             time,
             song.img as songImg,
-            style_ids as styleIds
+            style_ids as styleIds,
+            src
         from user,song
+        where song.singer_id = user.id
     </select>
 
 

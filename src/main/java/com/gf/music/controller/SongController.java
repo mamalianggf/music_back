@@ -23,18 +23,19 @@ public class SongController {
 
     /**
      * 获取歌曲
+     *
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/listSongs",method = RequestMethod.GET)
+    @RequestMapping(value = "/listSongs", method = RequestMethod.GET)
     @ResponseBody
-    public EiInfo listSongs(@RequestParam int pageNum,@RequestParam int pageSize) throws Exception{
+    public EiInfo listSongs(@RequestParam int pageNum, @RequestParam int pageSize) throws Exception {
         EiInfo eiInfo = new EiInfo();
-        PageInfo<HashMap<String, Object>> songPage = songService.listSongs(pageNum,pageSize);
+        PageInfo<HashMap<String, Object>> songPage = songService.listSongs(pageNum, pageSize);
         eiInfo.setStatus(CommonConstant.HTTP_STATUS_SUCCESS);
         eiInfo.setMessage("查询成功");
         HashMap result = new HashMap();
-        result.put("songs",songPage);
+        result.put("songs", songPage);
         eiInfo.setResult(result);
         return eiInfo;
     }

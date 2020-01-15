@@ -19,7 +19,10 @@ public class RequestInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String referer = request.getHeader("Referer");
-        if (CommonConstant.APPOINT_REFERER.equals(referer)){
+        if (referer == null) {
+            return false;
+        }
+        if (referer.startsWith(CommonConstant.APPOINT_REFERER)) {
             return true;
         }
         requestInterceptorLogger.warn("请求来源不明，禁止访问");

@@ -12,7 +12,8 @@ public class User implements Serializable{
     private String email;
     private boolean active;
 
-    public User() {
+    private User() {
+
     }
 
     public User(int id, String name, String pwd, int account, String img, String email, boolean active) {
